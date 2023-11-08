@@ -41,8 +41,9 @@ PG_RESET_TEMPLATE(ezTuneSettings_t, ezTune,
     .filterHz = SETTING_EZ_FILTER_HZ_DEFAULT,
     .axisRatio = SETTING_EZ_AXIS_RATIO_DEFAULT,
     .response = SETTING_EZ_RESPONSE_DEFAULT,
+    .tracking = SETTING_EZ_TRACKING_DEFAULT,
     .damping = SETTING_EZ_DAMPING_DEFAULT,
-    .stability = SETTING_EZ_STABILITY_DEFAULT,
+    .imbalance = SETTING_EZ_imbalance_DEFAULT,
     .aggressiveness = SETTING_EZ_AGGRESSIVENESS_DEFAULT,
     .rate = SETTING_EZ_RATE_DEFAULT,
     .expo = SETTING_EZ_EXPO_DEFAULT,
@@ -114,22 +115,22 @@ void ezTuneUpdate(void) {
         const float pitchRatio = ezTune()->axisRatio / 100.0f;
 
         //Roll
-        pidProfileMutable()->bank_mc.pid[PID_ROLL].P = pidDefaults[0] * ezTune()->response / 100.0f;
-        pidProfileMutable()->bank_mc.pid[PID_ROLL].I = pidDefaults[1] * ezTune()->stability / 100.0f;
-        pidProfileMutable()->bank_mc.pid[PID_ROLL].D = pidDefaults[2] * ezTune()->damping / 100.0f;
-        pidProfileMutable()->bank_mc.pid[PID_ROLL].FF = pidDefaults[3] * ezTune()->aggressiveness / 100.0f;
+        pidProfileMutable()->bank_mc.pid[PID_ROLL].P = pidDefaults[0] * ezTune()->tracking / 100.0f * ezTune()->response / 100.0f;
+        pidProfileMutable()->bank_mc.pid[PID_ROLL].I = pidDefaults[1] * ezTune()->imbalance / 100.0f * ezTune()->tracking / 100.0f * ezTune()->response / 100.0f;
+        pidProfileMutable()->bank_mc.pid[PID_ROLL].D = pidDefaults[2] * ezTune()->damping / 100.0f * ezTune()->response / 100.0f;
+        pidProfileMutable()->bank_mc.pid[PID_ROLL].FF = pidDefaults[3] * ezTune()->aggressiveness / 100.0f * ezTune()->response / 100.0f;
 
         //Pitch
-        pidProfileMutable()->bank_mc.pid[PID_PITCH].P = pidDefaults[0] * ezTune()->response / 100.0f * pitchRatio;
-        pidProfileMutable()->bank_mc.pid[PID_PITCH].I = pidDefaults[1] * ezTune()->stability / 100.0f * pitchRatio;
-        pidProfileMutable()->bank_mc.pid[PID_PITCH].D = pidDefaults[2] * ezTune()->damping / 100.0f * pitchRatio;
-        pidProfileMutable()->bank_mc.pid[PID_PITCH].FF = pidDefaults[3] * ezTune()->aggressiveness / 100.0f * pitchRatio;
+        pidProfileMutable()->bank_mc.pid[PID_PITCH].P = pidDefaults[0] * ezTune()->tracking / 100.0f * ezTune()->response / 100.0f * pitchRatio;
+        pidProfileMutable()->bank_mc.pid[PID_PITCH].I = pidDefaults[1] * ezTune()->imbalance / 100.0f * ezTune()->tracking / 100.0f * ezTune()->response / 100.0f * pitchRatio;
+        pidProfileMutable()->bank_mc.pid[PID_PITCH].D = pidDefaults[2] * ezTune()->damping / 100.0f * ezTune()->response / 100.0f * pitchRatio;
+        pidProfileMutable()->bank_mc.pid[PID_PITCH].FF = pidDefaults[3] * ezTune()->aggressiveness / 100.0f * ezTune()->response / 100.0f * pitchRatio;
     
         //Yaw
-        pidProfileMutable()->bank_mc.pid[PID_YAW].P = pidDefaultsYaw[0] * getYawPidScale(ezTune()->response);
-        pidProfileMutable()->bank_mc.pid[PID_YAW].I = pidDefaultsYaw[1] * getYawPidScale(ezTune()->stability);
-        pidProfileMutable()->bank_mc.pid[PID_YAW].D = pidDefaultsYaw[2] * getYawPidScale(ezTune()->damping);
-        pidProfileMutable()->bank_mc.pid[PID_YAW].FF = pidDefaultsYaw[3] * getYawPidScale(ezTune()->aggressiveness);
+        pidProfileMutable()->bank_mc.pid[PID_YAW].P = pidDefaultsYaw[0] * getYawPidScale(ezTune()->tracking) * ezTune()->response / 100.0f;
+        pidProfileMutable()->bank_mc.pid[PID_YAW].I = pidDefaultsYaw[1] * getYawPidScale(ezTune()->imbalance) * ezTune()->response / 100.0f;
+        pidProfileMutable()->bank_mc.pid[PID_YAW].D = pidDefaultsYaw[2] * getYawPidScale(ezTune()->damping) * ezTune()->response / 100.0f;
+        pidProfileMutable()->bank_mc.pid[PID_YAW].FF = pidDefaultsYaw[3] * getYawPidScale(ezTune()->aggressiveness) * ezTune()->response / 100.0f;
 
         //Setup rates
         ((controlRateConfig_t*)currentControlRateProfile)->stabilized.rates[FD_ROLL] = scaleRange(ezTune()->rate, 0, 200, 30, 90);

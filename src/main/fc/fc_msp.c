@@ -1614,8 +1614,9 @@ static bool mspFcProcessOutCommand(uint16_t cmdMSP, sbuf_t *dst, mspPostProcessF
             sbufWriteU16(dst, ezTune()->filterHz);
             sbufWriteU8(dst, ezTune()->axisRatio);
             sbufWriteU8(dst, ezTune()->response);
+            sbufWriteU8(dst, ezTune()->tracking);
             sbufWriteU8(dst, ezTune()->damping);
-            sbufWriteU8(dst, ezTune()->stability);
+            sbufWriteU8(dst, ezTune()->imbalance);
             sbufWriteU8(dst, ezTune()->aggressiveness);
             sbufWriteU8(dst, ezTune()->rate);
             sbufWriteU8(dst, ezTune()->expo);
@@ -3113,8 +3114,9 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
                 ezTuneMutable()->filterHz = sbufReadU16(src);
                 ezTuneMutable()->axisRatio = sbufReadU8(src);
                 ezTuneMutable()->response = sbufReadU8(src);
+                ezTuneMutable()->tracking = sbufReadU8(src);
                 ezTuneMutable()->damping = sbufReadU8(src);
-                ezTuneMutable()->stability = sbufReadU8(src);
+                ezTuneMutable()->imbalance = sbufReadU8(src);
                 ezTuneMutable()->aggressiveness = sbufReadU8(src);
                 ezTuneMutable()->rate = sbufReadU8(src);
                 ezTuneMutable()->expo = sbufReadU8(src);

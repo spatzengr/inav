@@ -1528,16 +1528,22 @@ groups:
         field: response
         min: 0
         max: 200
+        name: ez_tracking
+        description: "EzTune tracking"
+        default_value: 100
+        field: tracking
+        min: 0
+        max: 200
       - name: ez_damping
         description: "EzTune damping"
         default_value: 100
         field: damping
         min: 0
         max: 200
-      - name: ez_stability
-        description: "EzTune stability"
+      - name: ez_imbalance
+        description: "EzTune imbalance"
         default_value: 100
-        field: stability
+        field: imbalance
         min: 0
         max: 200
       - name: ez_aggressiveness
